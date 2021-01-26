@@ -1,10 +1,10 @@
 import pymysql
 
 
-class mysql_service(object):
+class MysqlService(object):
     '''mysql管理器'''
 
-    def __init__(self, db, user, passwd, host='localhost', port=3306, charset='utf8'):
+    def __init__(self, db="", user="", passwd="", host="", port=3306, charset="utf8"):
         '''初始化数据库'''
         self.__db = db
         self.__user = user
@@ -63,7 +63,7 @@ class mysql_service(object):
                 self.__cursor.execute(sql)
                 self.__connect.commit()
         except Exception as error:
-            print error
+            print(error)
         finally:
             self._close_db()
 
@@ -108,7 +108,7 @@ class mysql_service(object):
             sql = "update {table} set {values} where {condition}".format(table=table, values=update_data, condition=condition_data)
         else:
             sql = "update {table} set {values}".format(table=table, values=update_data)
-        print sql
+        print(sql)
 
         self.__cursor.execute(sql)
         self.__connect.commit()
