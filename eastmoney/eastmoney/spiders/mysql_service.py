@@ -28,7 +28,7 @@ class MysqlService(object):
             "port": self.__port,
             "charset": self.__charset
         }
-        self.__connect = MySQLdb.connect(**params)
+        self.__connect = pymysql.connect(**params)
         self.__cursor = self.__connect.cursor()
 
     def _close_db(self):
@@ -132,9 +132,8 @@ class MysqlService(object):
         # 处理传入的条件
         if condition:
             condition_list = self._deal_values(condition)
-            condition_data = 'and'.join(condition_list)
-            sql = "select {key} from {table} where{condition}".format(key=show_list, table=table, condition=condition_data)
-
+            condition_data = ' and '.join(condition_list)
+            sql = "select {key} from {table} where {condition} ".format(key=show_list, table=table, condition=condition_data)
         self.__cursor.execute(sql)
 
         # 返回一条数据还是所有数据
