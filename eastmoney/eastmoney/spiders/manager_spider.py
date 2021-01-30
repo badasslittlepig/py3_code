@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #基金经理的爬虫
 import scrapy
 import json

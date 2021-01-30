@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #基金爬虫
 import scrapy
 import json
@@ -24,8 +25,10 @@ class ManagerSpider(scrapy.Spider):
         unuse_str = "--"
         #fund return list
         #dom one one_month_return
+        print(soup)
         new_establish_fund = soup.find("div",class_="xinfajj")
-        if new_establish_fund == None:
+        end_establish_fund = soup.find("h3",text=re.compile("本基金已终止")).get_text()
+        if new_establish_fund == None && end_establish_fund == None:
             one_month_return = soup.find("span",text=re.compile("近1月")).find_next_sibling("span").get_text()
             if (unuse_str in one_month_return) == False:
                 one_month_return = one_month_return.replace("近1月：","").replace(".","").replace("%","")
@@ -68,7 +71,6 @@ class ManagerSpider(scrapy.Spider):
             fund_assets = fund_assets.split("（")[0]
             fund_establish_date = fund_info_list[3].get_text().replace("成 立 日：","")
             fund_level = fund_info_list[5].get_text().replace("基金评级：","")
-
             
             save_fund_info = {"one_month_return":int(one_month_return),"three_month_return":int(three_month_return),"six_month_return":int(six_month_return)}
             save_fund_info["one_year_return"] = int(one_year_return)

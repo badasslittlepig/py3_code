@@ -1,5 +1,5 @@
+# -*- coding: utf-8 -*-
 import pymysql
-
 
 class MysqlService(object):
     '''mysql管理器'''
