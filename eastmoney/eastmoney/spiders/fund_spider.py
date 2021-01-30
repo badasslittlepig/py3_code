@@ -25,9 +25,8 @@ class ManagerSpider(scrapy.Spider):
         unuse_str = "--"
         #fund return list
         #dom one one_month_return
-        print(soup)
         new_establish_fund = soup.find("div",class_="xinfajj")
-        end_establish_fund = soup.find("h3",text=re.compile("本基金已终止")).get_text()
+        end_establish_fund = soup.find("h3",text=re.compile("本基金已终止"))
         if (new_establish_fund == None) and (end_establish_fund == None):
             one_month_return = soup.find("span",text=re.compile("近1月")).find_next_sibling("span").get_text()
             if (unuse_str in one_month_return) == False:
