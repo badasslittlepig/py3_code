@@ -26,26 +26,25 @@ class GoodsInfoSpider(scrapy.Spider):
         now_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         body_str = response.body.decode()
         soup = BeautifulSoup(body_str, "lxml")
-        print(soup)
-        return
-        goods_list = soup.find("ul",{"id":"feed-main-list"}).find_all("li")
+        goods_list = soup.find("div",{"class":"zkcontent"}).find_all("div", class_="gooditem")
         if len(goods_list) > 0:
             for goods_info in goods_list:
-                goods_title = goods_info.find("h5",class_="feed-block-title").find_all("a")[0].get("title")
-                goods_url = goods_info.find("h5",class_="feed-block-title").find_all("a")[0].get("href")
-                goods_price = goods_info.find("h5",class_="feed-block-title").find("div",class_="z-highlight").get_text()
-                expired_logo = goods_info.find("span", class_="search-pastdue-mark")
-                if expired_logo == None:
-                    unique_str = hashlib.md5()
-                    unique_str.update(goods_url.encode("utf-8"))
-                    url_md5 = unique_str.hexdigest()
-                    exist_condition = {"url_md5":url_md5}
-                    exist_goods_info = MysqlService().get("blog_smzdm_search_trace", ["id"], exist_condition, True)
-                    goods_save_data = {"url_md5":url_md5, "goods_url":goods_url, "goods_title":goods_title, "goods_price":goods_price}
-                    goods_save_data["create_date"] = now_date
-                    if exist_goods_info == None:
-                        MysqlService().insert("blog_smzdm_search_trace", [goods_save_data])
-                        self.noticeWechat(goods_save_data)
+                print(goods_info)
+                goods_title = goods_info.find("a",class_="goodname").get_text()
+                goods_url = goods_info.find("a",class_="goodname").get("href")
+                if goods_url != "":
+                    goods_url = "https://guangdiu.com/" + goods_url
+                goods_price = goods_info.find("a",class_="goodname").find("span",class_="emphricepart").get_text()
+                unique_str = hashlib.md5()
+                unique_str.update(goods_url.encode("utf-8"))
+                url_md5 = unique_str.hexdigest()
+                exist_condition = {"url_md5":url_md5}
+                exist_goods_info = MysqlService().get("blog_smzdm_search_trace", ["id"], exist_condition, True)
+                goods_save_data = {"url_md5":url_md5, "goods_url":goods_url, "goods_title":goods_title, "goods_price":goods_price}
+                goods_save_data["create_date"] = now_date
+                if exist_goods_info == None:
+                    MysqlService().insert("blog_smzdm_search_trace", [goods_save_data])
+                    self.noticeWechat(goods_save_data)
    	 
     #打接口进行微信通知
     @staticmethod
