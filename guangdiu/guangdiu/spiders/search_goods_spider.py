@@ -29,7 +29,6 @@ class GoodsInfoSpider(scrapy.Spider):
         goods_list = soup.find("div",{"class":"zkcontent"}).find_all("div", class_="gooditem")
         if len(goods_list) > 0:
             for goods_info in goods_list:
-                print(goods_info)
                 goods_title = goods_info.find("a",class_="goodname").get_text()
                 goods_url = goods_info.find("a",class_="goodname").get("href")
                 if goods_url != "":
