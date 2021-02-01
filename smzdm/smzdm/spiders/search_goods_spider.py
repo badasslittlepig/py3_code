@@ -40,7 +40,7 @@ class GoodsInfoSpider(scrapy.Spider):
                         goods_save_data = {"url_md5":url_md5, "goods_url":goods_url, "goods_title":goods_title, "goods_price":goods_price}
                         goods_save_data["create_date"] = now_date
                         MysqlService().insert("blog_smzdm_search_trace", [goods_save_data])
-                        noticeWechat(goods_save_data)
+                    yield noticeWechat(goods_save_data)
     
     #打接口进行微信通知
     def noticeWechat(goods_data):
