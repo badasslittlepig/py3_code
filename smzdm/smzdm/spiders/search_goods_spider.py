@@ -5,8 +5,11 @@ import time
 import hashlib
 from bs4 import BeautifulSoup
 import urllib3
+import json
+import ssl
 from smzdm.spiders.mysql_service import MysqlService
 
+ssl._create_default_https_context = ssl._create_unverified_context
 class GoodsInfoSpider(scrapy.Spider):
     name = "smzdm_search"
 
@@ -36,19 +39,18 @@ class GoodsInfoSpider(scrapy.Spider):
                     url_md5 = unique_str.hexdigest()
                     exist_condition = {"url_md5":url_md5}
                     exist_goods_info = MysqlService().get("blog_smzdm_search_trace", ["id"], exist_condition, True)
+                    goods_save_data = {"url_md5":url_md5, "goods_url":goods_url, "goods_title":goods_title, "goods_price":goods_price}
+                    goods_save_data["create_date"] = now_date
                     if exist_goods_info == None:
-                        goods_save_data = {"url_md5":url_md5, "goods_url":goods_url, "goods_title":goods_title, "goods_price":goods_price}
-                        goods_save_data["create_date"] = now_date
                         MysqlService().insert("blog_smzdm_search_trace", [goods_save_data])
-                    yield noticeWechat(goods_save_data)
-    
+                        self.noticeWechat(goods_save_data)
+   	 
     #打接口进行微信通知
+    @staticmethod
     def noticeWechat(goods_data):
-        notice_uri = "https://www.skyshappiness.com/index.php?m=Admin&c=ApiNotice&a=wechatNotice"
+        notice_uri = "http://test.skyshappiness.com/index.php?m=Admin&c=ApiNotice&a=wechatNotice"
         notice_content = "商品标题："+goods_data["goods_title"]+"\r\n"+"商品价格："+goods_data["goods_price"]
         notice_data = {"notice_msg":notice_content, "notice_uri":goods_data["goods_url"]}
-        post_data = json.dumps(goods_data).encode('utf-8')
-        r = http.request("POST", notice_uri, body=post_data, headers={"Content-Type": "application/json"})
-        print(r)
-
+        http = urllib3.PoolManager()
+        http.request("POST", notice_uri, fields=notice_data)
 
