@@ -7,14 +7,14 @@ from bs4 import BeautifulSoup
 import urllib3
 import json
 import ssl
-from smzdm.spiders.mysql_service import MysqlService
+from guangdiu.spiders.mysql_service import MysqlService
 
 ssl._create_default_https_context = ssl._create_unverified_context
 class GoodsInfoSpider(scrapy.Spider):
-    name = "smzdm_search"
+    name = "guangdiu_search"
 
     def start_requests(self):
-        url = "https://search.smzdm.com/?c=home&s={search_key}&order=time&v=b"
+        url = "https://guangdiu.com/search.php?q={search_key}&keyfrom=hsearch"
         search_goods_list = MysqlService().get("blog_smzdm_search", ["goods_name"], {"status":1}, False)
         if len(search_goods_list) > 0:
             for search_goods in search_goods_list:
@@ -26,6 +26,8 @@ class GoodsInfoSpider(scrapy.Spider):
         now_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         body_str = response.body.decode()
         soup = BeautifulSoup(body_str, "lxml")
+        print(soup)
+        return
         goods_list = soup.find("ul",{"id":"feed-main-list"}).find_all("li")
         if len(goods_list) > 0:
             for goods_info in goods_list:
