@@ -39,7 +39,7 @@ class GoodsInfoSpider(scrapy.Spider):
                 url_md5 = unique_str.hexdigest()
                 exist_condition = {"url_md5":url_md5}
                 exist_goods_info = MysqlService().get("blog_smzdm_search_trace", ["id"], exist_condition, True)
-                goods_save_data = {"url_md5":url_md5, "goods_url":goods_url, "goods_title":goods_title, "goods_price":goods_price}
+                goods_save_data = {"url_md5":url_md5, "goods_url":goods_url, "goods_title":goods_title.strip(), "goods_price":goods_price.strip()}
                 goods_save_data["create_date"] = now_date
                 if exist_goods_info == None:
                     MysqlService().insert("blog_smzdm_search_trace", [goods_save_data])
