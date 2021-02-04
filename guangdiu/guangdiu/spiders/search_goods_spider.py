@@ -69,7 +69,7 @@ class GoodsInfoSpider(scrapy.Spider):
     #打接口进行微信通知
     @staticmethod
     def noticeWechat(goods_data):
-        notice_uri = "http://test.skyshappiness.com/index.php?m=Admin&c=ApiNotice&a=wechatNotice"
+        notice_uri = "http://test.skyshappiness.com/index.php?m=Admin&c=ApiNotice&a=noticeSth"
         notice_content = "商品标题："+goods_data["goods_title"]+"\r\n"+"商品价格："+goods_data["goods_price"]
         notice_data = {"notice_msg":notice_content, "notice_uri":goods_data["goods_url"]}
         http = urllib3.PoolManager()
