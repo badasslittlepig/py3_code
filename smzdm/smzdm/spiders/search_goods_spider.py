@@ -76,7 +76,7 @@ class GoodsInfoSpider(scrapy.Spider):
     def noticeWechat(goods_data):
         notice_uri = "http://test.skyshappiness.com/index.php?m=Admin&c=ApiNotice&a=noticeSth"
         notice_content = "商品标题：" + goods_data["goods_title"] + "\r\n商品价格：" + goods_data["goods_price"]
-        notice_content = notice_content + "\r\n历史低价：" + goods_data["low_price"]/100
+        notice_content = notice_content + "\r\n历史低价：" + str(goods_data["low_price"] / 100)
         notice_data = {"notice_msg":notice_content, "notice_uri":goods_data["goods_url"]}
         http = urllib3.PoolManager()
         http.request("POST", notice_uri, fields=notice_data)
