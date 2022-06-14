@@ -47,7 +47,7 @@ def start():
             browser.implicitly_wait(10)
             browser.get(browser.current_url)
             handle_page_lazy_loading()
-            save_userinfo()
+            # save_userinfo()
             save_works()
     finally:
         browser.close()
@@ -73,6 +73,8 @@ def handle_page_lazy_loading():
 
 def save_userinfo():
     username = browser.find_element(By.XPATH, '//*[@id="root"]/div/div[2]/div/div/div[2]/div[1]/div[2]/h1/span/span/span/span/span').text
+    if username == "":
+        username = browser.find_element(By.CLASS_NAME, "OKOabD2C").find_element(By.TAG_NAME, "span").text
     filepath = file_save_path + username
     if not os.path.exists(filepath):
         os.makedirs(filepath)
@@ -85,6 +87,8 @@ def save_userinfo():
 
 def save_works():
     user_name = browser.find_element(By.XPATH, '//*[@id="root"]/div/div[2]/div/div/div[2]/div[1]/div[2]/h1/span/span/span/span/span').text
+    if user_name == "":
+       user_name = browser.find_element(By.CLASS_NAME, "Yja39qrE").find_element(By.CLASS_NAME, "Nu66P_ba").text
     save_dir = file_save_path + user_name
     grabed_file_name = '已爬取.txt'
     ul =  browser.find_element(By.CLASS_NAME, 'ARNw21RN')
