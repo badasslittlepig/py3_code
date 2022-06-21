@@ -31,9 +31,6 @@ class JinsuSoldSpider(scrapy.Spider):
             notice_grab_uri_result = self.request_pool.request("POST", self.grab_notice_uri, post_data)
             return_str = notice_grab_uri_result.data.decode("UTF-8")
             return_data = json.loads(return_str)
-            print(return_data)
-            print(return_data["status"])
             if return_data["status"] == 200 :
                 wechat_notice_data = {"notice_msg":sold_title, "notice_uri": sold_uri}
                 self.request_pool.request("POST", self.wechat_notice_uri, wechat_notice_data)
-            exit()
