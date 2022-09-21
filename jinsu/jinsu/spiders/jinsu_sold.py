@@ -14,9 +14,10 @@ class JinsuSoldSpider(scrapy.Spider):
      "零柒机车_小勇", "奔达4S店", "啊电单车", "杨浦_ZMotor小小", "熊猫机9988", "口水娃", "浦江镇沪摩机车", "欣亦机车-小黑皮", "杨浦摩驿机车", "聚摩CLUB小宁-Inking", "景泰车行白老板",
      "小谢", "上海苑乐", "闵行聚友二手车", "上海驾驭机车", "聚摩club-77", "雷霆车行牛老板", "上海ZMOTOR烨", "擎天机车", "聚摩club塔塔", "驾驭机车-熊", "麒麟机车俱乐部", "驾驭机车—A.M.G",
      "上海魔域纹身", "骑麟机车俱乐部", "骑迹SMKClub", "琦鲁MOTO高桥店", "上海明帆", "鼎骑酒桶", "杨浦-ZMotor石头", "夏日车业", "阿东车行", "9MT-ALEN", "丰庄逸捷梁氏车行", "丰庄逸捷",
-     "杨浦Zmotor啊罡", "上海酷雷机车", "品道车业小欧", "51RT车尊技研", "9MT-啊喆", "K1摩托租赁", "品道车业小欧", "OMC摩托车俱乐部", "华兴机车", "BG4CKZ阿杰"]
-    wechat_notice_uri = "http://test.skyshappiness.com/index.php?m=Admin&c=ApiNotice&a=noticeSth"
-    grab_notice_uri   = "http://test.skyshappiness.com/index.php?m=Open&c=Grab&a=grabUriAdd"
+     "杨浦Zmotor啊罡", "上海酷雷机车", "品道车业小欧", "51RT车尊技研", "9MT-啊喆", "K1摩托租赁", "品道车业小欧", "OMC摩托车俱乐部", "华兴机车", "BG4CKZ阿杰","Z-Motor荣老板","jasonstar",
+     "ZG车务（小赵）", "艾摩邹老板", "驾驭-你很机车耶", "Z-motor樱子", "荣誉@爱诺", "上海雷霆车行"]
+    wechat_notice_uri = "http://www.skyshappiness.com/index.php?m=Admin&c=ApiNotice&a=noticeSth"
+    grab_notice_uri   = "http://www.skyshappiness.com/index.php?m=Open&c=Grab&a=grabUriAdd"
     request_pool      = urllib3.PoolManager()
 
     def parse(self, response):
@@ -36,5 +37,6 @@ class JinsuSoldSpider(scrapy.Spider):
             return_str = notice_grab_uri_result.data.decode("UTF-8")
             return_data = json.loads(return_str)
             if return_data["status"] == 200 :
+                sold_title = sold_title + "\r\nnlp分词结果：" + return_data["data"]["nlp_name"];
                 wechat_notice_data = {"notice_msg":sold_title, "notice_uri": sold_uri, "notice_user":"ok_Tas4xrdDs5sf_A1mrr29MTtUY,ok_Tas7S8rDGbcYce8u97I6g7HK8,ok_TaswRfYvH3dCQRgMd34JrRgTw"}
                 self.request_pool.request("POST", self.wechat_notice_uri, wechat_notice_data)
