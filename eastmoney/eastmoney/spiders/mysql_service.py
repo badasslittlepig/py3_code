@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+from tkinter import W
 import pymysql
 
 class MysqlService(object):
     '''mysql管理器'''
 
-    def __init__(self, db="", user="", passwd="", host="", port=3306, charset="utf8"):
+    def __init__(self, db="blog", user="root", passwd="qazshe123", host="127.0.0.1", port=3306, charset="utf8"):
         '''初始化数据库'''
         self.__db = db
         self.__user = user
@@ -134,6 +135,7 @@ class MysqlService(object):
             condition_list = self._deal_values(condition)
             condition_data = ' and '.join(condition_list)
             sql = "select {key} from {table} where {condition} ".format(key=show_list, table=table, condition=condition_data)
+            print(sql);exit()
         self.__cursor.execute(sql)
 
         # 返回一条数据还是所有数据

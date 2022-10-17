@@ -12,8 +12,9 @@ class ManagerSpider(scrapy.Spider):
 
     def start_requests(self):
         url = "http://fundf10.eastmoney.com/FundArchivesDatas.aspx?type=jjcc&code={fund_code}&topline=10&year=&month=&rt=0.6134177124013891"
+        now_date = datetime.now().date()
         while True:
-            fund_info = MysqlService().get("blog_fund_info", ["fund_code"], {"status":1}, True)
+            fund_info = MysqlService().get("blog_fund_info", ["fund_code"], {"status":1, "last_update_time":" < '"+now_date+" 00:00:00'"}, True)
             temp_url = url.format(fund_code=fund_info[0])
             add_params = {"fund_code":fund_info[0]}
             yield scrapy.Request(url=temp_url, callback=self.fundStockInfo, cb_kwargs=add_params)
@@ -79,7 +80,7 @@ class ManagerSpider(scrapy.Spider):
                 save_fund_info["start_date"] = fund_establish_date
             save_fund_info["fund_level"] = fund_level
             save_fund_info["fund_assets"] = fund_assets
-            save_fund_info["status"] = 2
+            save_fund_info["status"] = 1
         else:
             save_fund_info = {"status":2}
         MysqlService().update("blog_fund_info", save_fund_info, {"fund_code":fund_code})
