@@ -12,7 +12,8 @@ class JinsuSoldSpider(scrapy.Spider):
     request_pool        = urllib3.PoolManager()
     get_grab_uri        = "https://www.skyshappiness.com/index.php?m=Open&c=BbsDetail&a=getList"
     start_urls_response = request_pool.request("POST", get_grab_uri)
-    print(start_urls_response)
+    return_str = start_urls_response.data.decode("UTF-8")
+    print(return_str)
 
     wechat_notice_uri = "http://www.skyshappiness.com/index.php?m=Admin&c=ApiNotice&a=noticeSth"
     grab_notice_uri   = "http://www.skyshappiness.com/index.php?m=Open&c=Grab&a=grabUriAdd"
